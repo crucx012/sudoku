@@ -2,15 +2,8 @@ import React from 'react';
 import Square from './Square.jsx';
 
 class Cube extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
-    const color = this.props.color;
-    const onClick = this.props.onClick;
-    const index = this.props.index;
-    const state = this.props.state;
+    const {color, onClick, index, state} = this.props;
     const baseRow = this.getBaseRow(index);
     const baseColumn = this.getBaseColumn(index);
     return (

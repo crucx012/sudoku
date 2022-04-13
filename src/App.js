@@ -1,5 +1,4 @@
 import React from 'react';
-import logo from './logo.svg';
 import Cube from './Cube.jsx';
 import Selector from './Selector.jsx';
 import './styles/main.css';
@@ -9,7 +8,8 @@ class App extends React.Component {
     super(props);
     this.state = {
       selected: 1,
-      board: this.getEmptyBoard()
+      board: this.getEmptyBoard(),
+      errors: []
     };
     this.handleSelectionChangeClick = this.handleSelectionChangeClick.bind(this);
     this.handleSetSquareClick = this.handleSetSquareClick.bind(this);
@@ -18,7 +18,7 @@ class App extends React.Component {
   handleSelectionChangeClick(val) {
     this.setState({
       selected: val
-    })
+    });
   }
 
   handleSetSquareClick(col, row) {
@@ -26,7 +26,44 @@ class App extends React.Component {
     newBoard[row-1][col-1] = this.state.selected;
     this.setState({
       board: newBoard
+    });
+    this.checkErrors();
+  }
+
+  checkErrors() {
+    let errorSquares = [];
+    let compareRows = [];
+    let compareColumns = [];
+    for (let i = 0; i < this.state.board.length; i++) {
+      compareRows.push(this.state.board[i]);
+      let column = [];
+      for (let j = 0; j < compareRows[0].length; j++) {
+        column.push(this.state.board[j][i]);
+      }
+      compareColumns.push(column);
+    }
+    for (let i = 0; i < this.state.board.length; i++) {
+      for (let j = 0; j < this.state.board[0].length; j++) {
+        let square = this.state.board[i][j];
+        if ((this.validateCellByComparator(square, compareRows[i]) || this.validateCellByComparator(square, compareColumns[j]))) {
+          errorSquares.push([i,j]);
+        }
+      }
+    }
+    this.setState({
+      errors: errorSquares
+    });
+  }
+
+  validateCellByComparator(val, collection) {
+    if (val === 0) return false;
+    const duplicates = collection.filter((item) => {
+      if (item === val) {
+        return true;
+      }
+      return false;
     })
+    return duplicates.length > 1;
   }
 
   getEmptyBoard() {

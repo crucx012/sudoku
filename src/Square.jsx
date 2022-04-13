@@ -2,11 +2,11 @@ import React from 'react';
 
 class Square extends React.Component {
   render() {
-    let {column: col, row, color, state, index} = this.props;
-    const id = `${index}${col}${row}`;
+    let {column, row, color, state, index} = this.props;
+    const id = `${index}${column}${row}`;
     let value = 0;
     if (state.board) {
-      value = state.board[row-1][col-1];
+      value = state.board[row-1][column-1];
     }
     if (value === 0) {
       value = "";
