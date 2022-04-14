@@ -25,7 +25,11 @@ class App extends React.Component {
     if (index >= 0) {
       let squares = this.state.board;
       let updatedSquare = squares[index];
-      updatedSquare.value = this.state.selected;
+      if (updatedSquare.value !== this.state.selected) {
+        updatedSquare.value = this.state.selected;
+      } else {
+        updatedSquare.value = 0;
+      }
       squares[index] = updatedSquare;
       this.setState({
         board: squares
