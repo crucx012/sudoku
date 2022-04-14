@@ -118,21 +118,23 @@ class App extends React.Component {
 
   render() {
     return (
-      <div className="small-margin">
-        <div className="container">
-          <Cube topLeft={this.getTopLeft(1)} color="white" state={this.state} onClick={this.handleBoardSquareClick} />
-          <Cube topLeft={this.getTopLeft(2)} color="gray" state={this.state} onClick={this.handleBoardSquareClick} />
-          <Cube topLeft={this.getTopLeft(3)} color="white" state={this.state} onClick={this.handleBoardSquareClick} />
-        </div>
-        <div className="container">
-          <Cube topLeft={this.getTopLeft(4)} color="gray" state={this.state} onClick={this.handleBoardSquareClick} />
-          <Cube topLeft={this.getTopLeft(5)} color="white" state={this.state} onClick={this.handleBoardSquareClick} />
-          <Cube topLeft={this.getTopLeft(6)} color="gray" state={this.state} onClick={this.handleBoardSquareClick} />
-        </div>
-        <div className="container">
-          <Cube topLeft={this.getTopLeft(7)} color="white" state={this.state} onClick={this.handleBoardSquareClick} />
-          <Cube topLeft={this.getTopLeft(8)} color="gray" state={this.state} onClick={this.handleBoardSquareClick} />
-          <Cube topLeft={this.getTopLeft(9)} color="white" state={this.state} onClick={this.handleBoardSquareClick} />
+      <div className="small-margin container">
+        <div className="small-margin">
+          <div className="container">
+            <Cube topLeft={this.getTopLeft(1)} color="white" state={this.state} onClick={this.handleBoardSquareClick} />
+            <Cube topLeft={this.getTopLeft(2)} color="gray" state={this.state} onClick={this.handleBoardSquareClick} />
+            <Cube topLeft={this.getTopLeft(3)} color="white" state={this.state} onClick={this.handleBoardSquareClick} />
+          </div>
+          <div className="container">
+            <Cube topLeft={this.getTopLeft(4)} color="gray" state={this.state} onClick={this.handleBoardSquareClick} />
+            <Cube topLeft={this.getTopLeft(5)} color="white" state={this.state} onClick={this.handleBoardSquareClick} />
+            <Cube topLeft={this.getTopLeft(6)} color="gray" state={this.state} onClick={this.handleBoardSquareClick} />
+          </div>
+          <div className="container">
+            <Cube topLeft={this.getTopLeft(7)} color="white" state={this.state} onClick={this.handleBoardSquareClick} />
+            <Cube topLeft={this.getTopLeft(8)} color="gray" state={this.state} onClick={this.handleBoardSquareClick} />
+            <Cube topLeft={this.getTopLeft(9)} color="white" state={this.state} onClick={this.handleBoardSquareClick} />
+          </div>
         </div>
         <Selector selected={this.state.selected} onClick={this.handleSelectionChangeClick}/>
       </div>
