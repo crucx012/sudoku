@@ -20,13 +20,13 @@ class App extends React.Component {
     });
   }
 
-  handleBoardSquareClick(col, row) {
-    const index = this.state.board.findIndex((sqr) => sqr.column === col && sqr.row === row);
+  handleBoardSquareClick(square) {
+    const index = this.state.board.findIndex((sqr) => sqr.column === square.column && sqr.row === square.row);
     if (index >= 0) {
       let squares = this.state.board;
-      let square = squares[index];
-      square.value = this.state.selected;
-      squares[index] = square;
+      let updatedSquare = squares[index];
+      updatedSquare.value = this.state.selected;
+      squares[index] = updatedSquare;
       this.setState({
         board: squares
       });
@@ -35,22 +35,47 @@ class App extends React.Component {
   }
 
   checkErrors() {
+    let errors = [];
     for (let i = 1; i < 10; i++) {
-      const row = this.state.board.filter((sqr) => sqr.row === i && sqr.value > 0);
-      const column = this.state.board.filter((sqr) => sqr.column === i && sqr.value > 0);
-      const cube = this.state.board.filter((sqr) => sqr.cube === i && sqr.value > 0);
       for (let j = 1; j < 10; j++) {
-        if (this.validateCellByComparator(j, row) || this.validateCellByComparator(j, column) || this.validateCellByComparator(j, cube)) {
-          // record error
+        const square = this.state.board.filter((sqr) => sqr.row === i && sqr.column === j)[0];
+        if (square.value > 0) {
+          const row = this.state.board.filter((sqr) => sqr.row === square.row);
+          const column = this.state.board.filter((sqr) => sqr.column === square.column);
+          const cube = this.state.board.filter((sqr) => sqr.cube === square.cube);
+          if (this.hasDuplicateValue(square, row) || this.hasDuplicateValue(square, column) || this.hasDuplicateValue(square, cube)) {
+            errors.push(square);
+          }
         }
       }
     }
+    this.updateErrors(errors);
   }
 
-  validateCellByComparator(val, collection) {
-    if (val === 0) return false;
+  updateErrors(errors) {
+    let newSquares = this.state.board;
+    for (let i = 0; i < 10; i++) {
+      for (let j = 0; j < 10; j++) {
+        const index = this.state.board.findIndex((s) => s.column === i && s.row === j);
+        if (index >= 0) {
+          let updatedSquare = newSquares[index];
+          if (errors.includes(updatedSquare)) {
+            updatedSquare.hasError = true;
+          } else {
+            updatedSquare.hasError = false;
+          }
+          newSquares[index] = updatedSquare;
+        }
+      }
+    }
+    this.setState({
+      board: newSquares
+    });
+  }
+
+  hasDuplicateValue(square, collection) {
     const duplicates = collection.filter((sqr) => {
-      if (sqr.value === val) {
+      if (sqr.value === square.value) {
         return true;
       }
       return false;
@@ -61,11 +86,10 @@ class App extends React.Component {
   getEmptyBoard() {
     let board = [];
     for (let cube = 1; cube < 10; cube++) {
-      const baseRow = this.getBaseRow(cube);
-      const baseColumn = this.getBaseColumn(cube);
+      const topLeft = this.getTopLeft(cube);
       for (let i = 0; i < 3; i++) {
         for (let j = 0; j < 3; j++) {
-          board.push(this.Square(baseColumn+i,baseRow+j, cube, 0));
+          board.push(this.Square(topLeft[0]+i,topLeft[1]+j, cube));
         }
       }
     };
@@ -84,8 +108,8 @@ class App extends React.Component {
     return index % 3 === 1 ? 1 : index % 3 === 2 ? 4 : 7;
   }
 
-  Square(column, row, cube, value) {
-    return { column, row, cube, value };
+  Square(column, row, cube) {
+    return { column, row, cube, value: 0, hasError: false };
   };
 
   render() {

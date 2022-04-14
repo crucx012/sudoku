@@ -27,6 +27,10 @@
   background-color: lightYellow;
 }
 
+.red {
+  color: red;
+}
+
 .selected {
   background-color: lightblue;
 }
