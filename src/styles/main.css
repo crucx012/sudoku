@@ -9,6 +9,17 @@
   align-items: center;
 }
 
+.rectangle {
+  height: 50px;
+  width: 154px;
+  border-color: black;
+  border-width: 1px;
+  border-style: solid;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .cube {
   border-color: black;
   border-width: 1px;
