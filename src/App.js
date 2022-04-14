@@ -8,11 +8,10 @@ class App extends React.Component {
     super(props);
     this.state = {
       selected: 1,
-      board: this.getEmptyBoard(),
-      errors: []
+      board: this.getEmptyBoard()
     };
     this.handleSelectionChangeClick = this.handleSelectionChangeClick.bind(this);
-    this.handleSetSquareClick = this.handleSetSquareClick.bind(this);
+    this.handleBoardSquareClick = this.handleBoardSquareClick.bind(this);
   }
 
   handleSelectionChangeClick(val) {
@@ -21,44 +20,37 @@ class App extends React.Component {
     });
   }
 
-  handleSetSquareClick(col, row) {
-    let newBoard = this.state.board;
-    newBoard[row-1][col-1] = this.state.selected;
-    this.setState({
-      board: newBoard
-    });
+  handleBoardSquareClick(col, row) {
+    const index = this.state.board.findIndex((sqr) => sqr.column === col && sqr.row === row);
+    if (index >= 0) {
+      let squares = this.state.board;
+      let square = squares[index];
+      square.value = this.state.selected;
+      squares[index] = square;
+      this.setState({
+        board: squares
+      });
+    }
     this.checkErrors();
   }
 
   checkErrors() {
-    let errorSquares = [];
-    let compareRows = [];
-    let compareColumns = [];
-    for (let i = 0; i < this.state.board.length; i++) {
-      compareRows.push(this.state.board[i]);
-      let column = [];
-      for (let j = 0; j < compareRows[0].length; j++) {
-        column.push(this.state.board[j][i]);
-      }
-      compareColumns.push(column);
-    }
-    for (let i = 0; i < this.state.board.length; i++) {
-      for (let j = 0; j < this.state.board[0].length; j++) {
-        let square = this.state.board[i][j];
-        if ((this.validateCellByComparator(square, compareRows[i]) || this.validateCellByComparator(square, compareColumns[j]))) {
-          errorSquares.push([i,j]);
+    for (let i = 1; i < 10; i++) {
+      const row = this.state.board.filter((sqr) => sqr.row === i && sqr.value > 0);
+      const column = this.state.board.filter((sqr) => sqr.column === i && sqr.value > 0);
+      const cube = this.state.board.filter((sqr) => sqr.cube === i && sqr.value > 0);
+      for (let j = 1; j < 10; j++) {
+        if (this.validateCellByComparator(j, row) || this.validateCellByComparator(j, column) || this.validateCellByComparator(j, cube)) {
+          // record error
         }
       }
     }
-    this.setState({
-      errors: errorSquares
-    });
   }
 
   validateCellByComparator(val, collection) {
     if (val === 0) return false;
-    const duplicates = collection.filter((item) => {
-      if (item === val) {
+    const duplicates = collection.filter((sqr) => {
+      if (sqr.value === val) {
         return true;
       }
       return false;
@@ -68,29 +60,51 @@ class App extends React.Component {
 
   getEmptyBoard() {
     let board = [];
-    for (let i = 0; i < 9; i++) {
-      board.push([0, 0, 0, 0, 0, 0, 0, 0, 0]);
+    for (let cube = 1; cube < 10; cube++) {
+      const baseRow = this.getBaseRow(cube);
+      const baseColumn = this.getBaseColumn(cube);
+      for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+          board.push(this.Square(baseColumn+i,baseRow+j, cube, 0));
+        }
+      }
     };
     return board;
   }
+
+  getTopLeft(cube) {
+    return [this.getBaseColumn(cube), this.getBaseRow(cube)];
+  }
+
+  getBaseRow(index) {
+    return index <= 3 ? 1 : index <= 6 ? 4 : 7;
+  }
+
+  getBaseColumn(index) {
+    return index % 3 === 1 ? 1 : index % 3 === 2 ? 4 : 7;
+  }
+
+  Square(column, row, cube, value) {
+    return { column, row, cube, value };
+  };
 
   render() {
     return (
       <div className="small-margin">
         <div className="container">
-          <Cube color="white" index={1} state={this.state} onClick={this.handleSetSquareClick} />
-          <Cube color="gray" index={2} state={this.state} onClick={this.handleSetSquareClick} />
-          <Cube color="white" index={3} state={this.state} onClick={this.handleSetSquareClick} />
+          <Cube topLeft={this.getTopLeft(1)} color="white" state={this.state} onClick={this.handleBoardSquareClick} />
+          <Cube topLeft={this.getTopLeft(2)} color="gray" state={this.state} onClick={this.handleBoardSquareClick} />
+          <Cube topLeft={this.getTopLeft(3)} color="white" state={this.state} onClick={this.handleBoardSquareClick} />
         </div>
         <div className="container">
-          <Cube color="gray" index={4} state={this.state} onClick={this.handleSetSquareClick} />
-          <Cube color="white" index={5} state={this.state} onClick={this.handleSetSquareClick} />
-          <Cube color="gray" index={6} state={this.state} onClick={this.handleSetSquareClick} />
+          <Cube topLeft={this.getTopLeft(4)} color="gray" state={this.state} onClick={this.handleBoardSquareClick} />
+          <Cube topLeft={this.getTopLeft(5)} color="white" state={this.state} onClick={this.handleBoardSquareClick} />
+          <Cube topLeft={this.getTopLeft(6)} color="gray" state={this.state} onClick={this.handleBoardSquareClick} />
         </div>
         <div className="container">
-          <Cube color="white" index={7} state={this.state} onClick={this.handleSetSquareClick} />
-          <Cube color="gray" index={8} state={this.state} onClick={this.handleSetSquareClick} />
-          <Cube color="white" index={9} state={this.state} onClick={this.handleSetSquareClick} />
+          <Cube topLeft={this.getTopLeft(7)} color="white" state={this.state} onClick={this.handleBoardSquareClick} />
+          <Cube topLeft={this.getTopLeft(8)} color="gray" state={this.state} onClick={this.handleBoardSquareClick} />
+          <Cube topLeft={this.getTopLeft(9)} color="white" state={this.state} onClick={this.handleBoardSquareClick} />
         </div>
         <Selector selected={this.state.selected} onClick={this.handleSelectionChangeClick}/>
       </div>

@@ -3,36 +3,27 @@ import Square from './Square.jsx';
 
 class Cube extends React.Component {
   render() {
-    const {color, onClick, index, state} = this.props;
-    const baseRow = this.getBaseRow(index);
-    const baseColumn = this.getBaseColumn(index);
+    const {color, onClick, state, topLeft} = this.props;
     return (
       <div className="cube">
-        <div className="container">
-          <Square color={color} onClick={onClick} index={index} column={baseColumn} row={baseRow} state={state} />
-          <Square color={color} onClick={onClick} index={index} column={baseColumn+1} row={baseRow} state={state} />
-          <Square color={color} onClick={onClick} index={index} column={baseColumn+2} row={baseRow} state={state} />
-        </div>
-        <div className="container">
-          <Square color={color} onClick={onClick} index={index} column={baseColumn} row={baseRow+1} state={state} />
-          <Square color={color} onClick={onClick} index={index} column={baseColumn+1} row={baseRow+1} state={state} />
-          <Square color={color} onClick={onClick} index={index} column={baseColumn+2} row={baseRow+1} state={state} />
-        </div>
-        <div className="container">
-          <Square color={color} onClick={onClick} index={index} column={baseColumn} row={baseRow+2} state={state} />
-          <Square color={color} onClick={onClick} index={index} column={baseColumn+1} row={baseRow+2} state={state} />
-          <Square color={color} onClick={onClick} index={index} column={baseColumn+2} row={baseRow+2} state={state} />
-        </div>
+        {this.getRow(topLeft[0], topLeft[1], color, onClick, state)}
+        {this.getRow(topLeft[0], topLeft[1]+1, color, onClick, state)}
+        {this.getRow(topLeft[0], topLeft[1]+2, color, onClick, state)}
       </div>
     );
   }
 
-  getBaseRow(index) {
-    return this.props.index <= 3 ? 1 : this.props.index <= 6 ? 4 : 7;
-  }
-
-  getBaseColumn(index) {
-    return this.props.index % 3 === 1 ? 1 : this.props.index % 3 === 2 ? 4 : 7;
+  getRow(column, row, color, onClick, state) {
+    const index1 = state.board.findIndex((sqr) => sqr.column === column && sqr.row === row);
+    const index2 = state.board.findIndex((sqr) => sqr.column === column + 1 && sqr.row === row);
+    const index3 = state.board.findIndex((sqr) => sqr.column === column + 2 && sqr.row === row);
+    return (
+      <div className="container">
+        <Square color={color} onClick={onClick} square={state.board[index1]} selected={state.selected} />
+        <Square color={color} onClick={onClick} square={state.board[index2]} selected={state.selected} />
+        <Square color={color} onClick={onClick} square={state.board[index3]} selected={state.selected} />
+      </div>
+    )
   }
 }
 
