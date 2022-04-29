@@ -2,12 +2,21 @@ import React from 'react';
 
 class Selector extends React.Component {
   render() {
-    const {selected} = this.props;
-    const values = [1,4,7];
+    const {state} = this.props;
+    let values = [];
+    for (let i = 0; i < state.size; i++) {
+      const len = values.length;
+      if (len === 0) {
+        values.push(1);
+      } else {
+        const nextVal = values[len - 1] + state.size;
+        values.push(nextVal);
+      }
+    }
     const items = values.map((val) => {
-      return (this.getRow(val, selected))
+      return (this.getRow(val, state))
     });
-    const selectedClass = 0 === selected ? "selected" : "";
+    const selectedClass = 0 === state.selected ? "selected" : "";
     return (
       <div key='number-selector' id='number-selector' className='small-margin'>
         {items}
@@ -21,24 +30,24 @@ class Selector extends React.Component {
   }
 
 
-  getRow(val, selected) {
-    const val1 = val;
-    const val2 = val+1;
-    const val3 = val+2;
-    const selected1 = val1 === selected ? "selected" : "";
-    const selected2 = val2 === selected ? "selected" : "";
-    const selected3 = val3 === selected ? "selected" : "";
+  getRow(val, state) {
+    let row = [];
+    for (let i = 0; i < state.size; i++) {
+      const value = val + i;
+      const selected = value === state.selected ? "selected" : "";
+      row.push(this.getItem(value, selected));
+    }
     return (
       <div key={`selector-row${val}`} className="container">
-        <div key={`${val1}`} id={`selection${val1}`} className={`square ${selected1}`} onClick={() => this.props.onClick(val1)}>
-          <div className="noselect">{val1}</div>
-        </div>
-        <div key={val2} id={`selection${val2}`} className={`square ${selected2}`} onClick={() => this.props.onClick(val2)}>
-          <div className="noselect">{val2}</div>
-        </div>
-        <div key={val3} id={`selection${val3}`} className={`square ${selected3}`} onClick={() => this.props.onClick(val3)}>
-          <div className="noselect">{val3}</div>
-        </div>
+        {row}
+      </div>
+    )
+  }
+
+  getItem(val, selected) {
+    return (
+      <div key={`${val}`} id={`selection${val}`} className={`square ${selected}`} onClick={() => this.props.onClick(val)}>
+        <div className="noselect">{val}</div>
       </div>
     )
   }
