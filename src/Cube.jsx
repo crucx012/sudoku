@@ -19,7 +19,7 @@ class Cube extends React.Component {
     let squares = [];
     for (let i = 0; i < state.size; i++) {
       const index = state.board.findIndex((sqr) => sqr.column === (column + i) && sqr.row === row);
-      squares.push(<Square key={`square_${column+i}${row}`} color={color} onClick={onClick} square={state.board[index]} selected={state.selected} />);
+      squares.push(<Square key={`square_${column+i}${row}`} color={color} onClick={onClick} square={state.board[index]} state={state} />);
     }
     return (
       <div key={`row${column}_${row}`} className="container">

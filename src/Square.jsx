@@ -2,7 +2,7 @@ import React from 'react';
 
 class Square extends React.Component {
   render() {
-    let {color, square, selected} = this.props;
+    let {color, square, state} = this.props;
     let value = 0;
     let textColor = "";
     if (square) {
@@ -10,9 +10,12 @@ class Square extends React.Component {
     }
     if (value === 0) {
       value = "";
-    } else if (square.hasError) {
+    }
+    if (square.hasError) {
       textColor = "red";
-    } else if (value === selected) {
+    } else if (state.numberSelected !== null && value === state.numberSelected) {
+      color = "lightYellow";
+    } else if (state.squareSelected !== null && (square.column === state.squareSelected.column || square.row === state.squareSelected.row || square.cube === state.squareSelected.cube)) {
       color = "lightYellow";
     }
     return (

@@ -3,32 +3,61 @@ import Cube from './Cube.jsx';
 import Selector from './Selector.jsx';
 import './styles/main.css';
 
+const modes = ['Square First','Number First'];
+
 class App extends React.Component {
   constructor(props) {
     super(props);
     const board = this.getEmptyBoard(props.size)
     this.state = {
       size: props.size,
-      selected: 1,
-      board: board
+      numberSelected: 1,
+      squareSelected: null,
+      board: board,
+      mode: modes[1]
     };
     this.handleSelectionChangeClick = this.handleSelectionChangeClick.bind(this);
     this.handleBoardSquareClick = this.handleBoardSquareClick.bind(this);
   }
 
-  handleSelectionChangeClick(val) {
+  handleModeChangeClick() {
+    const index = modes.findIndex((val) => val === this.state.mode);
+    const nextIndex = (index+1)%modes.length;
+    const newMode = modes[nextIndex];
     this.setState({
-      selected: val
+      mode: newMode,
+      numberSelected: null,
+      squareSelected: null
     });
   }
 
+  handleSelectionChangeClick(val) {
+    if (this.state.mode === modes[0]) {
+      this.setSquare(this.state.squareSelected, val);
+    } else if (this.state.mode === modes[1]) {
+      this.setState({
+        numberSelected: val
+      });
+    }
+  }
+
   handleBoardSquareClick(square) {
+    if (this.state.mode === modes[0]) {
+      this.setState({
+        squareSelected: square
+      });
+    } else if (this.state.mode === modes[1]) {
+      this.setSquare(square, this.state.numberSelected);
+    }
+  }
+
+  setSquare(square, val) {
     const index = this.state.board.findIndex((sqr) => sqr.column === square.column && sqr.row === square.row);
     if (index >= 0) {
       let squares = this.state.board;
       let updatedSquare = squares[index];
-      if (updatedSquare.value !== this.state.selected) {
-        updatedSquare.value = this.state.selected;
+      if (updatedSquare.value !== val) {
+        updatedSquare.value = val;
       } else {
         updatedSquare.value = 0;
       }
@@ -128,16 +157,19 @@ class App extends React.Component {
   render() {
     return (
       <div className="small-margin container">
-        {this.getCubeRows(this.handleBoardSquareClick)}
-        <Selector state={this.state} onClick={this.handleSelectionChangeClick}/>
+        {this.getCubeRows()}
+        <div>
+          <div className='small-margin rectangle noselect' onClick={() => this.handleModeChangeClick()}>{this.state.mode}</div>
+          <Selector state={this.state} onClick={this.handleSelectionChangeClick}/>
+        </div>
       </div>
     )
   }
 
-  getCubeRows(onClick) {
+  getCubeRows() {
     let rows = [];
     for (let i = 0; i < this.state.size; i++) {
-      rows.push(this.getCubeRow(i * this.state.size, onClick));
+      rows.push(this.getCubeRow(i * this.state.size));
     }
     return (
       <div className="small-margin">
@@ -146,10 +178,10 @@ class App extends React.Component {
     )
   }
 
-  getCubeRow(index, onClick) {
+  getCubeRow(index) {
     let row = [];
     for (let i = 0; i < this.state.size; i++) {
-      row.push(this.getCube(index + i, onClick));
+      row.push(this.getCube(index + i));
     }
     return (
       <div key={`cube_row${index}`} className="container">
@@ -158,14 +190,14 @@ class App extends React.Component {
     )
   }
 
-  getCube(index, onClick) {
+  getCube(index,) {
     const topLeft = this.getTopLeft(index, this.state.size);
     let color = "white";
     if ((parseInt(index / this.state.size) + (index % this.state.size)) % 2 === 1) {
       color = "gray";
     }
     return (
-      <Cube key={`cube${index}`}topLeft={topLeft} color={color} state={this.state} onClick={onClick} />
+      <Cube key={`cube${index}`}topLeft={topLeft} color={color} state={this.state} onClick={this.handleBoardSquareClick} />
     )
   }
 }

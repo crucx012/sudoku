@@ -16,7 +16,7 @@ class Selector extends React.Component {
     const items = values.map((val) => {
       return (this.getRow(val, state))
     });
-    const selectedClass = 0 === state.selected ? "selected" : "";
+    const selectedClass = 0 === state.numberSelected ? "selected" : "";
     return (
       <div key='number-selector' id='number-selector' className='small-margin'>
         {items}
@@ -34,7 +34,7 @@ class Selector extends React.Component {
     let row = [];
     for (let i = 0; i < state.size; i++) {
       const value = val + i;
-      const selected = value === state.selected ? "selected" : "";
+      const selected = value === state.numberSelected ? "selected" : "";
       row.push(this.getItem(value, selected));
     }
     return (
