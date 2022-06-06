@@ -14,9 +14,9 @@ class Square extends React.Component {
     if (square.hasError) {
       textColor = "red";
     } else if (state.numberSelected !== null && value === state.numberSelected) {
-      color = "lightYellow";
+      color = "selected";
     } else if (state.squareSelected !== null && (square.column === state.squareSelected.column || square.row === state.squareSelected.row || square.cube === state.squareSelected.cube)) {
-      color = "lightYellow";
+      color = "selected";
     }
     return (
       <div id={`${square.column}${square.row}`} className={`square ${color} ${textColor}`} onClick={() => this.props.onClick(square)}>
