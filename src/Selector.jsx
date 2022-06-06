@@ -21,8 +21,8 @@ class Selector extends React.Component {
       <div key='number-selector' id='number-selector' className='small-margin'>
         {items}
         <div className="container">
-          <div key={0} id={`selection0`} className={`rectangle ${selectedClass}`} onClick={() => this.props.onClick(0)}>
-            <div className="noselect">ERASE</div>
+          <div key={0} id={`selection0`} className='rectangle border' onClick={() => this.props.onClick(0)}>
+            <div className={`noselect full center white ${selectedClass}`}>ERASE</div>
           </div>
         </div>
       </div>
@@ -46,8 +46,8 @@ class Selector extends React.Component {
 
   getItem(val, selected) {
     return (
-      <div key={`${val}`} id={`selection${val}`} className={`square ${selected}`} onClick={() => this.props.onClick(val)}>
-        <div className="noselect">{val}</div>
+      <div key={`${val}`} id={`selection${val}`} className='square border' onClick={() => this.props.onClick(val)}>
+        <div className={`noselect full center white ${selected}`}>{val}</div>
       </div>
     )
   }

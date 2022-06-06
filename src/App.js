@@ -159,7 +159,9 @@ class App extends React.Component {
       <div className="small-margin container">
         {this.getCubeRows()}
         <div>
-          <div className='small-margin rectangle noselect' onClick={() => this.handleModeChangeClick()}>{this.state.mode}</div>
+          <div className='small-margin rectangle border' onClick={() => this.handleModeChangeClick()}>
+            <div className='noselect full center white'>{this.state.mode}</div>
+          </div>
           <Selector state={this.state} onClick={this.handleSelectionChangeClick}/>
         </div>
       </div>

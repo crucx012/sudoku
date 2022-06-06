@@ -19,8 +19,8 @@ class Square extends React.Component {
       color = "selected";
     }
     return (
-      <div id={`${square.column}${square.row}`} className={`square ${color} ${textColor}`} onClick={() => this.props.onClick(square)}>
-        <div className="noselect">{value}</div>
+      <div id={`${square.column}${square.row}`} className='square border' onClick={() => this.props.onClick(square)}>
+          <div className={`noselect full center ${color} ${textColor}`}>{value}</div>
       </div>
     );
   }

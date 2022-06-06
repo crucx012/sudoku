@@ -9,7 +9,7 @@ class Cube extends React.Component {
       rows.push(this.getRow(topLeft[0], topLeft[1]+i, color, onClick, state))
     }
     return (
-      <div className="cube">
+      <div className="cube thick-border">
         {rows}
       </div>
     );

@@ -1,29 +1,29 @@
 .square {
   height: 50px;
   width: 50px;
-  border-color: black;
-  border-width: 1px;
-  border-style: solid;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  padding: 1px;
 }
 
 .rectangle {
   height: 50px;
-  width: 154px;
-  border-color: black;
-  border-width: 1px;
-  border-style: solid;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  width: 152px;
+  padding: 1px;
 }
 
 .cube {
-  border-color: black;
-  border-width: 1px;
-  border-style: solid;
+  padding: 3px;
+}
+
+.thick-border {
+  background-color: black;
+  border: 3px;
+  margin: 0 -3px -3px 0;
+}
+
+.border {
+  background-color: black;
+  border: 1px;
+  margin: 0 -1px -1px 0;
 }
 
 .white {
@@ -54,6 +54,12 @@
 .full {
   height: 100%;
   width: 100%;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .noselect {
