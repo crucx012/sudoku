@@ -65,46 +65,39 @@ class App extends React.Component {
       this.setState({
         board: squares
       });
-    }
     this.checkErrors();
+    }
   }
 
   checkErrors() {
-    const max = Math.pow(this.state.size, 2);
     let errors = [];
-    for (let i = 0; i < max; i++) {
-      for (let j = 0; j < max; j++) {
-        const square = this.state.board.filter((sqr) => sqr.row === i && sqr.column === j)[0];
-        if (square.value > 0) {
-          const row = this.state.board.filter((sqr) => sqr.row === square.row);
-          const column = this.state.board.filter((sqr) => sqr.column === square.column);
-          const cube = this.state.board.filter((sqr) => sqr.cube === square.cube);
-          if (this.hasDuplicateValue(square, row) || this.hasDuplicateValue(square, column) || this.hasDuplicateValue(square, cube)) {
-            errors.push(square);
-          }
+    this.state.board.forEach((square) => {
+      if (square.value > 0) {
+        const row = this.state.board.filter((sqr) => sqr.row === square.row);
+        const column = this.state.board.filter((sqr) => sqr.column === square.column);
+        const cube = this.state.board.filter((sqr) => sqr.cube === square.cube);
+        if (this.hasDuplicateValue(square, row) || this.hasDuplicateValue(square, column) || this.hasDuplicateValue(square, cube)) {
+          errors.push(square);
         }
       }
-    }
+    });
     this.updateErrors(errors);
   }
 
   updateErrors(errors) {
-    const max = Math.pow(this.state.size,2);
     let newSquares = this.state.board;
-    for (let i = 0; i < max; i++) {
-      for (let j = 0; j < max; j++) {
-        const index = this.state.board.findIndex((s) => s.column === i && s.row === j);
-        if (index >= 0) {
-          let updatedSquare = newSquares[index];
-          if (errors.includes(updatedSquare)) {
-            updatedSquare.hasError = true;
-          } else {
-            updatedSquare.hasError = false;
-          }
-          newSquares[index] = updatedSquare;
+    newSquares.forEach((sqr) => {
+      const index = this.state.board.findIndex((s) => s.column === sqr.column && s.row === sqr.row);
+      if (index >= 0) {
+        let updatedSquare = newSquares[index];
+        if (errors.includes(updatedSquare)) {
+          updatedSquare.hasError = true;
+        } else {
+          updatedSquare.hasError = false;
         }
+        newSquares[index] = updatedSquare;
       }
-    }
+    })
     this.setState({
       board: newSquares
     });
@@ -192,7 +185,7 @@ class App extends React.Component {
     )
   }
 
-  getCube(index,) {
+  getCube(index) {
     const topLeft = this.getTopLeft(index, this.state.size);
     let color = "white";
     if ((parseInt(index / this.state.size) + (index % this.state.size)) % 2 === 1) {
