@@ -4,10 +4,14 @@ import Selector from './Selector.jsx';
 import './styles/main.css';
 
 const modes = ['Square First','Number First'];
+let numbers = [];
 
 class App extends React.Component {
   constructor(props) {
     super(props);
+    for (let i = 1; i <= Math.pow(props.size,2); i++){
+      numbers.push(i);
+    }
     const board = this.getEmptyBoard(props.size)
     this.state = {
       size: props.size,
@@ -70,37 +74,30 @@ class App extends React.Component {
   }
 
   checkErrors() {
-    let errors = [];
-    this.state.board.forEach((square) => {
-      if (square.value > 0) {
-        const row = this.state.board.filter((sqr) => sqr.row === square.row);
-        const column = this.state.board.filter((sqr) => sqr.column === square.column);
-        const cube = this.state.board.filter((sqr) => sqr.cube === square.cube);
-        if (this.hasDuplicateValue(square, row) || this.hasDuplicateValue(square, column) || this.hasDuplicateValue(square, cube)) {
-          errors.push(square);
-        }
-      }
-    });
-    this.updateErrors(errors);
-  }
-
-  updateErrors(errors) {
     let newSquares = this.state.board;
     newSquares.forEach((sqr) => {
       const index = this.state.board.findIndex((s) => s.column === sqr.column && s.row === sqr.row);
-      if (index >= 0) {
-        let updatedSquare = newSquares[index];
-        if (errors.includes(updatedSquare)) {
-          updatedSquare.hasError = true;
-        } else {
-          updatedSquare.hasError = false;
-        }
-        newSquares[index] = updatedSquare;
-      }
-    })
+      let updatedSquare = newSquares[index];
+      const row = newSquares.filter((s) => sqr.row === s.row);
+      const column = newSquares.filter((s) => sqr.column === s.column);
+      const cube = newSquares.filter((s) => sqr.cube === s.cube);
+      updatedSquare.hasError = sqr.value > 0 && (this.hasDuplicateValue(sqr, row) || this.hasDuplicateValue(sqr, column) || this.hasDuplicateValue(sqr, cube));
+      updatedSquare.possible = this.getPossibleNumbers(sqr, row, column, cube);
+      newSquares[index] = updatedSquare;
+    });
     this.setState({
       board: newSquares
     });
+  }
+
+  getPossibleNumbers(square, row, column, cube) {
+    let possible = numbers.slice();
+    row = row.filter((sqr) => sqr.value > 0 && sqr !== square).map((sqr) => {return sqr.value})
+    column = column.filter((sqr) => sqr.value > 0 && sqr !== square).map((sqr) => {return sqr.value});
+    cube = cube.filter((sqr) => sqr.value > 0 && sqr !== square).map((sqr) => {return sqr.value});
+    let values = row.concat(column).concat(cube);
+    possible = possible.filter((n) => {return !values.includes(n)});
+    return possible;
   }
 
   hasDuplicateValue(square, collection) {
@@ -144,7 +141,7 @@ class App extends React.Component {
   }
 
   Square(column, row, cube) {
-    return { column, row, cube, value: 0, hasError: false };
+    return { column, row, cube, value: 0, hasError: false, possible: numbers.slice()};
   }
 
   render() {

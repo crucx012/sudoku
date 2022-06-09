@@ -13,7 +13,7 @@ class Square extends React.Component {
     }
     if (square.hasError) {
       textColor = "red";
-    } else if (state.numberSelected !== null && value === state.numberSelected) {
+    } else if (state.numberSelected !== null && (value === state.numberSelected || (value === "" && square.possible.includes(state.numberSelected)))) {
       color = "selected";
     } else if (state.squareSelected !== null && (square.column === state.squareSelected.column || square.row === state.squareSelected.row || square.cube === state.squareSelected.cube)) {
       color = "selected";
